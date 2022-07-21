@@ -2,6 +2,7 @@
 import classes from "./Quiz.module.css";
 import ActiveQuiz from "../../components/ActiveQuiz/ActiveQuiz";
 import FinishedQuiz from "../../components/FinishedQuiz/FinishedQuiz";
+import WithRouter from "../../hoc/WithRouter/WithRouter";
 
 class Quiz extends Component {
     state = {
@@ -88,6 +89,10 @@ class Quiz extends Component {
             results: []
         });
     }
+    
+    componentDidMount() {
+        console.log(this.props.params.id);
+    }
 
     render() {
         return (
@@ -114,4 +119,4 @@ class Quiz extends Component {
     }
 }
 
-export default Quiz
+export default WithRouter(Quiz)
