@@ -6,6 +6,7 @@ import is from 'is_js';
 
 const Auth = () => {
     const [state, setState] = useState({
+        isFormValid: false,
         formControls: {
             email: {
                 value: '',
@@ -76,7 +77,13 @@ const Auth = () => {
 
         formControls[controlName] = control;
 
+        let isFormValid = true;
+        Object.keys(formControls).forEach(name => {
+            isFormValid = formControls[name].valid && isFormValid;
+        });
+
         setState({
+            isFormValid,
             formControls
         });
     };
@@ -109,11 +116,11 @@ const Auth = () => {
 
                     {renderInputs()}
 
-                    <Button type="success" onClick={loginHandler}>
+                    <Button type="success" onClick={loginHandler} disabled={!state.isFormValid}>
                         Войти
                     </Button>
 
-                    <Button type="primary" onClick={registerHandler}>
+                    <Button type="primary" onClick={registerHandler} disabled={!state.isFormValid}>
                         Зарегистрироваться
                     </Button>
                 </form>
