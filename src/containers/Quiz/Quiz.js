@@ -3,6 +3,8 @@ import classes from "./Quiz.module.css";
 import ActiveQuiz from "../../components/ActiveQuiz/ActiveQuiz";
 import FinishedQuiz from "../../components/FinishedQuiz/FinishedQuiz";
 import WithRouter from "../../hoc/WithRouter/WithRouter";
+import axios from "../../axios/axios-quiz";
+import Loader from "../../components/UI/Loader/Loader";
 
 class Quiz extends Component {
     state = {
@@ -10,30 +12,8 @@ class Quiz extends Component {
         results: {},
         activeQuestion: 0,
         answerState: null,
-        quiz: [
-            {
-                id: 1,
-                question: 'Какого цвета небо?',
-                rightAnswerId: 2,
-                answers: [
-                    {text: 'Чёрный', id: 1},
-                    {text: 'Синий', id: 2},
-                    {text: 'Красный', id: 3},
-                    {text: 'Зелённый', id: 4},
-                ]
-            },
-            {
-                id: 2,
-                question: 'Какого цвета небо?',
-                rightAnswerId: 6,
-                answers: [
-                    {text: 'Чёрный', id: 5},
-                    {text: 'Синий', id: 6},
-                    {text: 'Красный', id: 7},
-                    {text: 'Зелённый', id: 8},
-                ]
-            }
-        ]
+        quiz: [],
+        loading: true
     };
 
     onAnswerClickHandler = (answerId) => {
@@ -89,9 +69,19 @@ class Quiz extends Component {
             results: []
         });
     }
-    
-    componentDidMount() {
-        console.log(this.props.params.id);
+
+    async componentDidMount() {
+        try {
+            const response = await axios.get(`/quizzes/${this.props.params.id}.json`);
+            const quiz = response.data;
+            console.log(quiz);
+            this.setState({
+                quiz,
+                loading: false
+            });
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     render() {
@@ -99,19 +89,22 @@ class Quiz extends Component {
             <div className={classes['Quiz']}>
                 <div className={classes['QuizWrapper']}>
                     <h1>Ответьте на все вопросы</h1>
+
                     {
-                        this.state.isFinished
-                            ? <FinishedQuiz results={this.state.results}
-                                            quiz={this.state.quiz}
-                                            onRetry={this.retryHandler}
-                            />
-                            : <ActiveQuiz question={this.state.quiz[this.state.activeQuestion].question}
-                                          answers={this.state.quiz[this.state.activeQuestion].answers}
-                                          onAnswerClick={this.onAnswerClickHandler}
-                                          quizLenght={this.state.quiz.length}
-                                          answerNumber={this.state.activeQuestion + 1}
-                                          state={this.state.answerState}
-                            />
+                        this.state.loading
+                            ? <Loader/>
+                            : this.state.isFinished
+                                ? <FinishedQuiz results={this.state.results}
+                                                quiz={this.state.quiz}
+                                                onRetry={this.retryHandler}
+                                />
+                                : <ActiveQuiz question={this.state.quiz[this.state.activeQuestion].question}
+                                              answers={this.state.quiz[this.state.activeQuestion].answers}
+                                              onAnswerClick={this.onAnswerClickHandler}
+                                              quizLenght={this.state.quiz.length}
+                                              answerNumber={this.state.activeQuestion + 1}
+                                              state={this.state.answerState}
+                                />
                     }
                 </div>
             </div>

@@ -5,9 +5,11 @@ import {createControl, validate, validateForm} from "../../form/formFramework";
 import Input from "../../components/UI/Input/Input";
 import Auxiliary from "../../hoc/Auxiliary/Auxiliary";
 import Select from "../../components/UI/Select/Select";
+import axios from "../../axios/axios-quiz";
 
 function createOptionControl(number) {
     return createControl({
+        id: number,
         label: `Вариант ${number}`,
         errorMessage: 'Значение не может быть пустым'
     }, {required: true});
@@ -46,7 +48,7 @@ const QuizCreator = (props) => {
             question: question.value,
             id: index,
             rightAnswerId: state.rightAnswerId,
-            answer: [
+            answers: [
                 {text: option1.value, id: option1.id},
                 {text: option2.value, id: option2.id},
                 {text: option3.value, id: option3.id},
@@ -62,10 +64,21 @@ const QuizCreator = (props) => {
             formControls: createFormControls()
         })
     };
-    const createQuizHandler = (event) => {
+    const createQuizHandler = async (event) => {
         event.preventDefault();
-        
-        console.log(state.quiz);
+
+        try {
+            await axios.post('/quizzes.json', state.quiz);
+            setState({
+                ...state,
+                quiz: [],
+                isFormValid: false,
+                rightAnswerId: 1,
+                formControls: createFormControls()
+            });
+        } catch (err) {
+            console.log(err);
+        }
     };
     const onChangeHandler = (value, controlName) => {
         const formControls = {...state.formControls};
