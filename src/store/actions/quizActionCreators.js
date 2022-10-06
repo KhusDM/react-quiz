@@ -4,7 +4,8 @@
     FETCH_QUIZZES_START,
     FETCH_QUIZZES_SUCCESS,
     FINISH_QUIZ,
-    QUIZ_NEXT_QUESTION, QUIZ_RETRY,
+    QUIZ_NEXT_QUESTION,
+    QUIZ_RETRY,
     QUIZ_SET_STATE
 } from "./actionTypes";
 import axios from "../../axios/axios-quiz";

@@ -3,9 +3,10 @@ import classes from "./Auth.module.css";
 import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
 import is from 'is_js';
-import axios from "axios";
+import {connect} from "react-redux";
+import {auth} from "../../store/actions/authActionCreator";
 
-const Auth = () => {
+const Auth = (props) => {
     const [state, setState] = useState({
         isFormValid: false,
         formControls: {
@@ -36,31 +37,19 @@ const Auth = () => {
         }
     });
 
-    const loginHandler = async () => {
-        try {
-            const authData = {
-                email: state.formControls.email.value,
-                password: state.formControls.password.value,
-                returnSecureToken: true
-            }
-            const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyClMiy-m9wt59DGRcdbWVdxmWuwJco753g', authData);
-            console.log(response.data);
-        } catch (e) {
-            console.log(e);
-        }
+    const loginHandler = () => {
+        props.auth(
+            state.formControls.email.value,
+            state.formControls.password.value,
+            true
+        );
     };
-    const registerHandler = async () => {
-        try {
-            const authData = {
-                email: state.formControls.email.value,
-                password: state.formControls.password.value,
-                returnSecureToken: true
-            }
-            const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyClMiy-m9wt59DGRcdbWVdxmWuwJco753g', authData);
-            console.log(response.data);
-        } catch (e) {
-            console.log(e);
-        }
+    const registerHandler = () => {
+        props.auth(
+            state.formControls.email.value,
+            state.formControls.password.value,
+            false
+        );
     };
     const submitHandler = (event) => {
         event.preventDefault();
@@ -150,4 +139,10 @@ const Auth = () => {
     );
 };
 
-export default Auth;
+function mapDispatchToProps(dispatch) {
+    return {
+        auth: (email, password, isLogin) => dispatch(auth(email, password, isLogin))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Auth);

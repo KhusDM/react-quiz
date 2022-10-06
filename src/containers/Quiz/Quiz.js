@@ -2,10 +2,9 @@
 import classes from "./Quiz.module.css";
 import ActiveQuiz from "../../components/ActiveQuiz/ActiveQuiz";
 import FinishedQuiz from "../../components/FinishedQuiz/FinishedQuiz";
-import WithRouter from "../../hoc/WithRouter/WithRouter";
 import Loader from "../../components/UI/Loader/Loader";
 import {connect} from "react-redux";
-import {fetchQuizById, quizAnswerClick, retryQuiz} from "../../store/actions/actionCreators";
+import {fetchQuizById, quizAnswerClick, retryQuiz} from "../../store/actions/quizActionCreators";
 
 class Quiz extends Component {
     componentDidMount() {
@@ -63,4 +62,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WithRouter(Quiz));
+export default connect(mapStateToProps, mapDispatchToProps)(Quiz);

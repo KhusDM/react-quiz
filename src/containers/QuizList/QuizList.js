@@ -3,7 +3,7 @@ import classes from "./QuizList.module.css";
 import {NavLink} from "react-router-dom";
 import Loader from "../../components/UI/Loader/Loader";
 import {connect} from "react-redux";
-import {fetchQuizzes} from "../../store/actions/actionCreators";
+import {fetchQuizzes} from "../../store/actions/quizActionCreators";
 
 class QuizList extends Component {
     async componentDidMount() {
